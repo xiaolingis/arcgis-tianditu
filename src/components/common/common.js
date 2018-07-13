@@ -30,15 +30,18 @@ class Common {
     }
 
     commonLoad(modules) {
-        return loadModules (modules, this.options (''));
-        // return loadModules (modules, this.options('http://localhost:8080/4.7/dojo/dojo.js'));
+        // 如果本地没有API就使用这行,url 为空则默认加载官网API;
+        // return loadModules (modules, this.options (''));
+        // 如果本地有部署API,则使用这句,根据情况修改自己的地址;
+        return loadModules (modules, this.options ('http://localhost:8080/4.7/dojo/dojo.js'));
     }
 
     _maptype() {
+        // 该方法仅适用于天地图,因为天地图是同一个服务器,通过url传参来控制不同的地图;
         return 'vec';
     }
 
-    loadBaseTitle() {
+    loadBaseTitle() { // 这个方法用于加载地图,目前测试了天地图,谷歌地图,高德地图,切换不同的url,即可加载不同的底图;
         let self = this;
         this.commonLoad ([
             'esri/layers/BaseTileLayer',
@@ -58,8 +61,8 @@ class Common {
                         type: Color
                     }
                 },
-                // generate the tile url for a given level, row and column
-                getTileUrl: function (level, row, col) {
+                // 通过传入参数 level,row,col 来获得 加载瓦片URL;
+                getTileUrl(level, row, col) {
                     // 高德地图
                     return 'http://webrd0' + (col % 4 + 1) + '.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x=' + col + '&y=' + row + '&z=' + level;
                     // 天地图
@@ -68,35 +71,30 @@ class Common {
                          '&STYLE=default&TILEMATRIXSET=c&TILEMATRIX=' +
                          level + '&TILEROW=' + row + '&TILECOL=' + col + '&FORMAT=tiles';*/
                 },
-                // This method fetches tiles for the specified level and size.
-                // Override this method to process the data returned from the server.
-                fetchTile: function (level, row, col) {
-
-                    // call getTileUrl() method to construct the URL to tiles
-                    // for a given level, row and col provided by the LayerView
+                // 此方法获取指定级别和大小的切片。重写此方法以处理从服务器返回的数据。
+                fetchTile(level, row, col) {
+                    //调用getTileUrl（）方法为LayerView提供给定级别，行和列的瓦片数据
                     let url = this.getTileUrl (level, row, col);
-                    // request for tiles based on the generated url
-                    // set allowImageDataAccess to true to allow
-                    // cross-domain access to create WebGL textures for 3D.
+                    // 通过生成的url 请求瓦片数据
+                    // 将 allowImageDataAccess 设置为true 以允许跨域访问为3D创建WebGL纹理。
                     return esriRequest (url, {
                         responseType: 'image',
                         allowImageDataAccess: true
                     })
-                    .then (function (response) {
-                        // when esri request resolves successfully
-                        // get the image from the response
+                    .then ((response) => {
+                        // 当esri请求成功时，从响应数据中获取图像
                         let image = response.data;
                         let width = this.tileInfo.size[0];
                         let height = this.tileInfo.size[0];
-                        // create a canvas with 2D rendering context
+                        // 创建一个 canvas ;
                         let canvas = document.createElement ('canvas');
                         let context = canvas.getContext ('2d');
                         canvas.width = width;
                         canvas.height = height;
-                        // Draw the blended image onto the canvas.
+                        // 将混合的图像绘制到 canvas 上
                         context.drawImage (image, 0, 0, width, height);
                         return canvas;
-                    }.bind (this));
+                    });
                 }
             });
             this.stamenTileLayer = new TintLayer ({
@@ -118,12 +116,10 @@ class Common {
             let map = new Map ({
                 layers: [this.stamenTileLayer]
             });
-            // and we show that map in a container w/ id #viewDiv
             this.webmap = map;
             this.initMapView ();
         })
         .catch (err => {
-            // handle any errors
             console.error (err);
         });
     }
