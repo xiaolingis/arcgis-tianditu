@@ -7,7 +7,7 @@ import { loadModules } from 'esri-loader';
 class Common {
     constructor () {
         this.serverAddress = [
-            'http://t0.tianditu.cn/',
+            'http://t0.tianditu.cn/', // 天地图
             'http://t1.tianditu.cn/',
             'http://t2.tianditu.cn/',
             'http://t3.tianditu.cn/',
@@ -15,6 +15,10 @@ class Common {
             'http://t5.tianditu.cn/',
             'http://t6.tianditu.cn/',
             'http://t7.tianditu.cn/',
+            'http://webrd01.is.autonavi.com/appmaptile',// 高德
+            'http://webrd02.is.autonavi.com/appmaptile',
+            'http://webrd03.is.autonavi.com/appmaptile',
+            'http://webrd04.is.autonavi.com/appmaptile',
         ];
     }
 
@@ -56,11 +60,13 @@ class Common {
 
                 // generate the tile url for a given level, row and column
                 getTileUrl: function (level, row, col) {
-                    return 'http://t' + col % 8 + '.tianditu.cn/' + self._maptype () + '_c/wmts?' +
+                    // 高德地图
+                    return 'http://webrd0' + (col % 4 + 1) + '.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x=' + col + '&y=' + row + '&z=' + level;
+                    // 天地图
+                   /* return 'http://t' + col % 8 + '.tianditu.cn/' + self._maptype () + '_c/wmts?' +
                         'SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=' + self._maptype () +
                         '&STYLE=default&TILEMATRIXSET=c&TILEMATRIX=' +
-                        level + '&TILEROW=' + row + '&TILECOL=' + col + '&FORMAT=tiles';
-                    // return this.urlTemplate.replace ('{z}', level).replace ('{x}', col).replace ('{y}', row);
+                        level + '&TILEROW=' + row + '&TILECOL=' + col + '&FORMAT=tiles';*/
                 },
 
                 // This method fetches tiles for the specified level and size.
