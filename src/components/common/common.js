@@ -19,6 +19,7 @@ class Common {
             'http://webrd02.is.autonavi.com/',
             'http://webrd03.is.autonavi.com/',
             'http://webrd04.is.autonavi.com/',
+            'http://localhost:8080/4.8/esri/core/workers/worker.js'
         ];
     }
 
@@ -66,10 +67,10 @@ class Common {
                     // 高德地图
                     /*return 'http://webrd0' + (col % 4 + 1) + '.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x=' + col + '&y=' + row + '&z=' + level;*/
                     // 天地图
-                     return 'http://t' + col % 8 + '.tianditu.cn/' + self._maptype () + '_c/wmts?' +
-                         'SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=' + self._maptype () +
-                         '&STYLE=default&TILEMATRIXSET=c&TILEMATRIX=' +
-                         level + '&TILEROW=' + row + '&TILECOL=' + col + '&FORMAT=tiles';
+                    return 'http://t' + col % 8 + '.tianditu.cn/' + self._maptype () + '_c/wmts?' +
+                        'SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=' + self._maptype () +
+                        '&STYLE=default&TILEMATRIXSET=c&TILEMATRIX=' +
+                        level + '&TILEROW=' + row + '&TILECOL=' + col + '&FORMAT=tiles';
                 },
                 // 此方法获取指定级别和大小的切片。重写此方法以处理从服务器返回的数据。
                 fetchTile(level, row, col) {
@@ -107,7 +108,7 @@ class Common {
     }
 
     init() {
-        this.requestConfig ();
+        this.requestConfig (); // 请求跨域问题解决,将url push 到对应的对象即可;
         this.commonLoad (
             ['esri/Map', 'esri/views/MapView', 'esri/config'],
             this.options ('')
