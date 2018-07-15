@@ -65,12 +65,12 @@ class Common {
                 // 通过传入参数 level,row,col 来获得 加载瓦片URL;
                 getTileUrl(level, row, col) {
                     // 高德地图
-                    /*return 'http://webrd0' + (col % 4 + 1) + '.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x=' + col + '&y=' + row + '&z=' + level;*/
+                    return 'http://webrd0' + (col % 4 + 1) + '.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x=' + col + '&y=' + row + '&z=' + level;
                     // 天地图
-                    return 'http://t' + col % 8 + '.tianditu.cn/' + self._maptype () + '_c/wmts?' +
+                    /*return 'http://t' + col % 8 + '.tianditu.cn/' + self._maptype () + '_c/wmts?' +
                         'SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=' + self._maptype () +
                         '&STYLE=default&TILEMATRIXSET=c&TILEMATRIX=' +
-                        level + '&TILEROW=' + row + '&TILECOL=' + col + '&FORMAT=tiles';
+                        level + '&TILEROW=' + row + '&TILECOL=' + col + '&FORMAT=tiles';*/
                 },
                 // 此方法获取指定级别和大小的切片。重写此方法以处理从服务器返回的数据。
                 fetchTile(level, row, col) {
@@ -126,12 +126,20 @@ class Common {
     }
 
     initMapView() {
-        this.commonLoad (['esri/views/MapView'])
-        .then (([MapView]) => {
+        this.commonLoad (['esri/views/MapView', 'esri/geometry/Point'])
+        .then (([MapView, Point]) => {
             let view = new MapView ({
                 map: this.webmap,
                 container: 'viewDiv',
-                zoom: 3,
+                zoom: 6,
+            });
+            view.when (() => {
+                let pt = new Point ({
+                    latitude: 49,
+                    longitude: -126
+                });
+// go to the given point
+//                 view.goTo (pt);
             });
         }, reason => {
             console.error (reason);
