@@ -139,7 +139,7 @@ class Common {
                     longitude: -126
                 });
 // go to the given point
-//                 view.goTo (pt);
+                view.goTo (pt);
             });
         }, reason => {
             console.error (reason);
