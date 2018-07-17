@@ -12,7 +12,14 @@ import common from '../common/common'
             }
         },
         mounted () {
-            new common().loadBaseTitle()
+            new common().loadBaseTitle();
+           /* this.$getData('api/list/test')
+            .then(result => {
+                console.log (result);
+            },reason => {
+                console.log (reason.message);
+                console.log (reason.name);
+            })*/
         },
         methods:{}
     }
